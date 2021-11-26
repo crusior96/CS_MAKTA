@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="10dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageview_captured"
+        android:layout_width="match_parent"
+        android:layout_height="586dp"
+        android:layout_weight="1" />
+
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp">
+            <android.widget.Button
+                android:id="@+id/menu_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/buttonshape"
+                android:text="포즈 변경"
+                android:textColor="#ffffff" />
+
+            <Space
+                android:layout_height="wrap_content"
+                android:layout_width="15dp"/>
+
+            <android.widget.Button
+                android:id="@+id/menu_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="배경 변경"
+                android:textColor="#ffffff"
+                android:background="@drawable/buttonshape"/>
+
+            <Space
+                android:layout_height="wrap_content"
+                android:layout_width="15dp"/>
+            <android.widget.Button
+                android:id="@+id/menu_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="인물 캡쳐"
+                android:textColor="#ffffff"
+                android:background="@drawable/buttonshape"/>
+
+            <Space
+                android:layout_height="wrap_content"
+                android:layout_width="15dp"/>
+            <android.widget.Button
+                android:id="@+id/menu_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="블러 처리"
+                android:textColor="#ffffff"
+                android:background="@drawable/buttonshape"/>
+
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp">
+
+        <ImageButton
+            android:id="@+id/bt_back_1"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_backview"
+            android:background="@drawable/buttonshape"/>
+
+        <Space
+            android:layout_width="154dp"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:id="@+id/bt_next_2"
+            android:src="@drawable/ic_nextview"
+            android:background="@drawable/buttonshape"/>
+
+    </LinearLayout>
+
+</LinearLayout>
