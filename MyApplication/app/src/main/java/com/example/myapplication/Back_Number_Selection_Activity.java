@@ -116,7 +116,7 @@ public class Back_Number_Selection_Activity extends AppCompatActivity {
             img_temp.setImageURI(selectedImageUri);
             BitmapDrawable drawable = (BitmapDrawable) img_temp.getDrawable();
             back_bitmap = drawable.getBitmap();
-            //connect("/change_background");
+            connect("/change_background");
         }
     }
 

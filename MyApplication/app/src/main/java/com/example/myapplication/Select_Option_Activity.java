@@ -47,7 +47,7 @@ import java.util.ArrayList;
 public class Select_Option_Activity extends AppCompatActivity{
     private String base_url;
     ImageButton btBack_1, btNext_2;
-    Button Menu_1, Menu_2, Menu_3;
+    Button Menu_1, Menu_2, Menu_3, Menu_4;
     ImageView imageview_captured;
     JSONObject jsonObject;
     Bitmap res;
@@ -65,6 +65,7 @@ public class Select_Option_Activity extends AppCompatActivity{
         Menu_1 = (Button) findViewById(R.id.menu_1);
         Menu_2 = (Button) findViewById(R.id.menu_2);
         Menu_3 = (Button) findViewById(R.id.menu_3);
+        Menu_4 = (Button) findViewById(R.id.menu_4);
 
         Bundle extras = getIntent().getExtras();
         byte[] byteArray = getIntent().getByteArrayExtra("image");
@@ -150,6 +151,27 @@ public class Select_Option_Activity extends AppCompatActivity{
                 intent.putExtra("url_for_network", base_url);
                 startActivity(intent);
 
+            }
+        });
+
+        Menu_4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                Intent intent = new Intent(Select_Option_Activity.this, Portrait_Selection_Activity.class);
+
+                Bitmap bitm = ((BitmapDrawable)imageview_captured.getDrawable()).getBitmap();
+                float scale = (float) (1024/(float)bitm.getWidth());
+                int image_w = (int) (bitm.getWidth() * scale);
+                int image_h = (int) (bitm.getHeight() * scale);
+                Bitmap resize = Bitmap.createScaledBitmap(bitm, image_w, image_h, true);
+                resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+
+                intent.putExtra("image", byteArray);
+                intent.putExtra("url_for_network", base_url);
+                startActivity(intent);
             }
         });
 

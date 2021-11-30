@@ -245,8 +245,6 @@ public class CropperActivity extends AppCompatActivity {
                     out.close();
                     Log.v("http", "send");
                     //response
-                    response = con.getInputStream();
-                    res_bitmap = BitmapFactory.decodeStream(response);
 
                     Log.v("http", "response");
                     //Response stream종료
@@ -254,7 +252,6 @@ public class CropperActivity extends AppCompatActivity {
 
                     // connection종료
                     con.disconnect();
-                    res = res_bitmap;
 
 
                 } catch (Exception e) {
@@ -270,9 +267,6 @@ public class CropperActivity extends AppCompatActivity {
         try{
 
             uThread.join();
-
-            imageview_crop.setImageBitmap(res);
-            imageview_crop.invalidate();
 
         }catch (InterruptedException e){
 

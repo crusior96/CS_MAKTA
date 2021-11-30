@@ -27,6 +27,7 @@
         <activity android:name=".Pose_Number_Selection_Activity"/>
         <activity android:name=".Back_Number_Selection_Activity"/>
         <activity android:name=".Segmentataion_Selection_Activity"/>
+        <activity android:name=".Portrait_Selection_Activity"/>
         <activity
             android:name=".CropperActivity"
             android:exported="true"

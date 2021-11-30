@@ -11,13 +11,13 @@
         android:layout_height="568dp"
         android:layout_above="@+id/const_lay"
         android:layout_marginBottom="22dp"
-        android:gravity="center">
+        android:gravity="center"
+        android:scaleType="centerInside">
 
         <ImageView
             android:id="@+id/image_temp"
             android:layout_width="match_parent"
-            android:layout_height="568dp"
-            android:layout_weight="1" />
+            android:layout_height="451dp" />
 
     </LinearLayout>
 

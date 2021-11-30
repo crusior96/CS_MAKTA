@@ -9,8 +9,8 @@
     <ImageView
         android:id="@+id/imageview_captured"
         android:layout_width="match_parent"
-        android:layout_height="586dp"
-        android:layout_weight="1" />
+        android:layout_height="451dp"
+        android:scaleType="centerInside" />
 
     <HorizontalScrollView
         android:layout_width="wrap_content"
@@ -74,25 +74,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="10dp">
+        android:padding="5dp">
 
         <ImageButton
             android:id="@+id/bt_back_1"
             android:layout_width="70dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_backview"
-            android:background="@drawable/buttonshape"/>
+            android:background="@drawable/buttonshape"
+            android:src="@drawable/ic_backview" />
 
         <Space
             android:layout_width="154dp"
             android:layout_height="wrap_content" />
 
         <ImageButton
+            android:id="@+id/bt_next_2"
             android:layout_width="70dp"
             android:layout_height="50dp"
-            android:id="@+id/bt_next_2"
-            android:src="@drawable/ic_nextview"
-            android:background="@drawable/buttonshape"/>
+            android:background="@drawable/buttonshape"
+            android:src="@drawable/ic_nextview" />
 
     </LinearLayout>
 

@@ -58,13 +58,15 @@ public class Segmentataion_Selection_Activity extends AppCompatActivity {
         img_temp.setImageBitmap(bitmap_2);
         base_url = getIntent().getStringExtra("url_for_network");
 
+
+
         //이전 화면으로 돌아가는 버튼
         button_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 Intent intent = new Intent(Segmentataion_Selection_Activity.this, Select_Option_Activity.class);
-                Bitmap bitm = bitmap_2;
+                Bitmap bitm = original_bitmap;
                 float scale = (float) (1024/(float)bitm.getWidth());
                 int image_w = (int) (bitm.getWidth() * scale);
                 int image_h = (int) (bitm.getHeight() * scale);
@@ -170,8 +172,10 @@ public class Segmentataion_Selection_Activity extends AppCompatActivity {
         };
         uThread.start();
         try{
-
             uThread.join();
+
+            img_temp.setImageBitmap(res);
+            img_temp.invalidate();
 
         }catch (InterruptedException e){
 
