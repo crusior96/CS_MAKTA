@@ -51,8 +51,7 @@ public class Select_Option_Activity extends AppCompatActivity{
     ImageView imageview_captured;
     JSONObject jsonObject;
     Bitmap res;
-    Bitmap forShoot;    //전송받은 원본 or 잘린 이미지
-    int pose_number = 0;
+    Bitmap forShoot;    //CropperActivity로부터 전송받은 원본 or 잘린 이미지
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -70,11 +69,12 @@ public class Select_Option_Activity extends AppCompatActivity{
         Bundle extras = getIntent().getExtras();
         byte[] byteArray = getIntent().getByteArrayExtra("image");
         Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-        forShoot = bitmap;
+        forShoot = bitmap;  //Intent에서 이어받은 bitmap을 forShoot에 바로 이식해둔다
         base_url = getIntent().getStringExtra("url_for_network");
 
         imageview_captured.setImageBitmap(bitmap);
 
+        //포즈변경(Pose_Number_Selection_Activity)로 이동하는 버튼
         Menu_1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -97,6 +97,7 @@ public class Select_Option_Activity extends AppCompatActivity{
             }
         });
 
+        //배경변경(Back_Number_Selection_Activity)로 이동하는 버튼
         Menu_2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -118,6 +119,7 @@ public class Select_Option_Activity extends AppCompatActivity{
             }
         });
 
+        //인물이미지추출(Segmentataion_Selection_Activity)로 이동하는 버튼
         Menu_3.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -125,17 +127,19 @@ public class Select_Option_Activity extends AppCompatActivity{
                 Bitmap segmented_picture;
                 original_picture = forShoot;//원본 사진
 
-                //connect("/segmentation");
-                //segmented_picture = res;    //변한 사진
+                connect("/segmentation");
+                segmented_picture = res;    //변한 사진
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 Intent intent = new Intent(Select_Option_Activity.this, Segmentataion_Selection_Activity.class);
-                //float scale = (float) (1024/(float)segmented_picture.getWidth());
-                //int image_w = (int) (segmented_picture.getWidth() * scale);
-                //int image_h = (int) (segmented_picture.getHeight() * scale);
-                //Bitmap resize = Bitmap.createScaledBitmap(segmented_picture, image_w, image_h, true);
-                //resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                //byte[] byteArray = stream.toByteArray();
+
+                float scale = (float) (1024/(float)segmented_picture.getWidth());
+                int image_w = (int) (segmented_picture.getWidth() * scale);
+                int image_h = (int) (segmented_picture.getHeight() * scale);
+                Bitmap resize = Bitmap.createScaledBitmap(segmented_picture, image_w, image_h, true);
+                resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
 
                 ByteArrayOutputStream stream_2 = new ByteArrayOutputStream();
                 float scale_2 = (float) (1024/(float)original_picture.getWidth());
@@ -146,7 +150,8 @@ public class Select_Option_Activity extends AppCompatActivity{
                 byte[] byteArray_2 = stream_2.toByteArray();
 
 
-                //intent.putExtra("image", byteArray);
+
+                intent.putExtra("image", byteArray);
                 intent.putExtra("original", byteArray_2);
                 intent.putExtra("url_for_network", base_url);
                 startActivity(intent);
@@ -154,6 +159,7 @@ public class Select_Option_Activity extends AppCompatActivity{
             }
         });
 
+        //블러처리(Portrait_Selection_Activity)로 이동하는 버튼
         Menu_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

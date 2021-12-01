@@ -59,6 +59,9 @@ public class Result_Activity extends AppCompatActivity {
 
         imageview_final.setImageBitmap(bitmap_final);
 
+        //이 화면에 들어오는 순간 원본 이미지는 아예 삭제해버리는 방향으로 진행한다
+        connect();
+
         //아예 처음 화면으로 돌아가게 바꿔버림
         btBack_2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +75,6 @@ public class Result_Activity extends AppCompatActivity {
         btSave.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                connect();
                 saveBitmapToJpeg(bitmap_final);
             }
         });

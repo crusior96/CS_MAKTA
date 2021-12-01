@@ -67,7 +67,6 @@ public class CropperActivity extends AppCompatActivity {
     ImageView imageview_crop;
     ImageButton btBrowse, btReset, btNext_1;
     JSONObject jsonObject;
-    Bitmap res;
 
     @Override
     protected void onCreate(Bundle savedInstance){

@@ -105,6 +105,30 @@ public class Portrait_Selection_Activity extends AppCompatActivity {
             }
         });
 
+        sig_1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sigma_value = 1;
+                connect();
+            }
+        });
+
+        sig_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sigma_value = 2;
+                connect();
+            }
+        });
+
+        sig_3.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                sigma_value = 3;
+                connect();
+            }
+        });
+
 
     }
 
@@ -128,7 +152,7 @@ public class Portrait_Selection_Activity extends AppCompatActivity {
 
 
 
-                    URL url = new URL(base_url+"/posetransfer");
+                    URL url = new URL(base_url+"/portrait_mode");
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
                     con.setDoInput(true); //input 허용
                     con.setDoOutput(true);  // output 허용
@@ -178,6 +202,9 @@ public class Portrait_Selection_Activity extends AppCompatActivity {
         try{
 
             uThread.join();
+
+            img_temp.setImageBitmap(res);
+            img_temp.invalidate();
 
         }catch (InterruptedException e){
 
