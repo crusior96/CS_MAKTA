@@ -138,7 +138,7 @@ public class Back_Number_Selection_Activity extends AppCompatActivity {
                     String byteStream = Base64.encodeToString(image, 0);
 
                     jsonObject = new JSONObject();
-                    jsonObject.put("background", back_bitmap);
+                    jsonObject.put("background", byteStream);
 
                     String data = jsonObject.toString();
 
