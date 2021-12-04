@@ -150,6 +150,7 @@ public class CropperActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if(resultCode == RESULT_OK){
                 imageview_crop.setImageURI(result.getUri());
+                imageview_crop.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             }
         }
 
@@ -206,9 +207,7 @@ public class CropperActivity extends AppCompatActivity {
                     String data = jsonObject.toString();
 
 
-
-
-                    URL url = new URL(base_url+"/original_image_file");
+                    URL url = new URL(base_url + "/original_image_file");
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
                     con.setDoInput(true); //input 허용
                     con.setDoOutput(true);  // output 허용
@@ -228,14 +227,7 @@ public class CropperActivity extends AppCompatActivity {
 
                     //dos.writeBytes(lineEnd);
                     // Bitmap을 ByteBuffer로 전환
-                    byte[] pixels = new byte[bitm.getWidth() * bitm.getHeight()];
-                    for (int i = 0; i < bitm.getWidth(); ++i) {
-                        for (int j = 0; j < bitm.getHeight(); ++j) {
-                            //we're interested only in the MSB of the first byte,
-                            //since the other 3 bytes are identical for B&W images
-                            pixels[i + j] = (byte) ((bitm.getPixel(i, j) & 0x80) >> 7);
-                        }
-                    }
+
 
                     //dos.write(data);
                     //dos.writeBytes(lineEnd);
@@ -244,6 +236,9 @@ public class CropperActivity extends AppCompatActivity {
                     out.close();
                     Log.v("http", "send");
                     //response
+
+                    response = con.getInputStream();
+                    res_bitmap = BitmapFactory.decodeStream(response);
 
                     Log.v("http", "response");
                     //Response stream종료
@@ -264,9 +259,7 @@ public class CropperActivity extends AppCompatActivity {
         };
         uThread.start();
         try{
-
             uThread.join();
-
         }catch (InterruptedException e){
 
             e.printStackTrace();
