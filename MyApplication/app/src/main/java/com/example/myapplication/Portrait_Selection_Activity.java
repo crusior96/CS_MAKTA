@@ -40,7 +40,7 @@ public class Portrait_Selection_Activity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
-        setContentView(R.layout.segmentation_selection);
+        setContentView(R.layout.portrait_selection);
 
         button_1 = (ImageButton) findViewById(R.id.button1);
         button_2 = (ImageButton) findViewById(R.id.button2);
@@ -200,12 +200,10 @@ public class Portrait_Selection_Activity extends AppCompatActivity {
         };
         uThread.start();
         try{
-
             uThread.join();
-
+            img_temp.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             img_temp.setImageBitmap(res);
             img_temp.invalidate();
-
         }catch (InterruptedException e){
 
             e.printStackTrace();
