@@ -10,7 +10,7 @@
         android:id="@+id/imageview_final"
         android:layout_width="match_parent"
         android:layout_height="451dp"
-        android:scaleType="centerInside" />
+        android:scaleType="fitCenter" />
 
     <LinearLayout
         android:layout_width="match_parent"

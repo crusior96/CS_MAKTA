@@ -12,7 +12,7 @@
         android:layout_above="@+id/const_lay"
         android:layout_marginBottom="22dp"
         android:gravity="center"
-        android:scaleType="centerInside">
+        android:scaleType="fitCenter">
 
         <ImageView
             android:id="@+id/image_temp"

@@ -11,7 +11,7 @@
         android:id="@+id/image_temp"
         android:layout_width="match_parent"
         android:layout_height="451dp"
-        android:scaleType="centerInside" />
+        android:scaleType="fitCenter" />
 
     <Space
         android:layout_width="match_parent"

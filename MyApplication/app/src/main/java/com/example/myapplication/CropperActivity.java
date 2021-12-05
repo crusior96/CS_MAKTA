@@ -150,7 +150,6 @@ public class CropperActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if(resultCode == RESULT_OK){
                 imageview_crop.setImageURI(result.getUri());
-                imageview_crop.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             }
         }
 
