@@ -19,7 +19,7 @@
         android:padding="20dp">
 
         <ImageButton
-            android:id="@+id/bt_back_2"
+            android:id="@+id/bt_back"
             android:layout_width="70dp"
             android:layout_height="50dp"
             android:background="@drawable/buttonshape"

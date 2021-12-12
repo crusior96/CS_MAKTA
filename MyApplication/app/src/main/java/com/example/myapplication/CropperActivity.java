@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.icu.util.Output;
 import android.net.Uri;
 import android.os.Build;
@@ -64,7 +65,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class CropperActivity extends AppCompatActivity {
     private String base_url;
-    ImageView imageview_crop;
+    ImageView imageview_Crop;
     ImageButton btBrowse, btReset, btNext_1;
     JSONObject jsonObject;
 
@@ -76,7 +77,7 @@ public class CropperActivity extends AppCompatActivity {
         btBrowse = findViewById(R.id.bt_browse);
         btReset = findViewById(R.id.bt_reset);
         btNext_1 = findViewById(R.id.bt_next_1);
-        imageview_crop = findViewById(R.id.imageview_crop);
+        imageview_Crop = findViewById(R.id.imageview_crop);
 
 
 
@@ -111,33 +112,39 @@ public class CropperActivity extends AppCompatActivity {
         }
 
 
-        btReset.setOnClickListener(view -> imageview_crop.setImageBitmap(null));
+        btReset.setOnClickListener(view -> imageview_Crop.setImageBitmap(null));
 
         btNext_1.setOnClickListener(view -> {
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             Intent intent = new Intent(CropperActivity.this, Select_Option_Activity.class);
 
-            if(((BitmapDrawable)imageview_crop.getDrawable()).getBitmap() != null){
-                Bitmap bitmap = ((BitmapDrawable)imageview_crop.getDrawable()).getBitmap();
-                //HTTP_POST(bitmap);
-                connect(bitmap);
-                //먼저 원본 이미지를 보낸 다음 crop 작업 작동하는게 좋을듯하다
-                float scale = (float) (1024/(float)bitmap.getWidth());
-                int image_w = (int) (bitmap.getWidth() * scale);
-                int image_h = (int) (bitmap.getHeight() * scale);
-                Bitmap resize = Bitmap.createScaledBitmap(bitmap, image_w, image_h, true);
-                resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-                intent.putExtra("image", byteArray);
-                intent.putExtra("url_for_network", base_url);
-                imageview_crop.setImageBitmap(null);
-                startActivity(intent);
-            }
-            else if(((BitmapDrawable)imageview_crop.getDrawable()).getBitmap() == null){
-                String msg = "이미지를 꼭 추가해주세요";
+            if(base_url == "") {
+                String msg = "URL을 꼭 추가해주세요";
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
             }
+            else{
+                if(imageview_Crop.getDrawable() != null){
+                    Bitmap bitmap = ((BitmapDrawable)imageview_Crop.getDrawable()).getBitmap();
+                    //HTTP_POST(bitmap);
+                    connect(bitmap);
+                    //먼저 원본 이미지를 보낸 다음 crop 작업 작동하는게 좋을듯하다
+                    float scale = (float) (1024/(float)bitmap.getWidth());
+                    int image_w = (int) (bitmap.getWidth() * scale);
+                    int image_h = (int) (bitmap.getHeight() * scale);
+                    Bitmap resize = Bitmap.createScaledBitmap(bitmap, image_w, image_h, true);
+                    resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    intent.putExtra("image", byteArray);
+                    intent.putExtra("url_for_network", base_url);
+                    startActivity(intent);
+                }
+                else if(imageview_Crop.getDrawable() == null){
+                    String msg = "이미지를 꼭 추가해주세요";
+                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                }
+            }
+
 
         });
     }
@@ -149,7 +156,7 @@ public class CropperActivity extends AppCompatActivity {
         if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if(resultCode == RESULT_OK){
-                imageview_crop.setImageURI(result.getUri());
+                imageview_Crop.setImageURI(result.getUri());
             }
         }
 
@@ -237,7 +244,6 @@ public class CropperActivity extends AppCompatActivity {
                     //response
 
                     response = con.getInputStream();
-                    res_bitmap = BitmapFactory.decodeStream(response);
 
                     Log.v("http", "response");
                     //Response stream종료

@@ -46,7 +46,7 @@ public class Result_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.result_scene);
 
-        btBack_2 = (ImageButton) findViewById(R.id.bt_back_2);
+        btBack_2 = (ImageButton) findViewById(R.id.bt_back);
         btSave = (ImageButton) findViewById(R.id.bt_save);
         imageview_final = (ImageView) findViewById(R.id.imageview_final);
 
@@ -104,24 +104,7 @@ public class Result_Activity extends AppCompatActivity {
 
     }
 
-    public void saveBtmapToJpeg_30(Bitmap bmp){
-        try{
-            String root = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-            File myDir = new File(root + "/saved_images");
-            myDir.mkdirs();
 
-            String timestamp = new SimpleDateFormat("HHmmss").format(new Date());
-            String f_name = timestamp + ".jpg";
-            File file = new File(myDir, f_name);
-
-            FileOutputStream out = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-        }catch(Exception e){
-            Log.d("Mission Failed", e.toString());
-        }
-    }
 
     public void connect(){
         Thread uThread = new Thread() {

@@ -35,7 +35,18 @@
 
         <Space
             android:layout_height="wrap_content"
-            android:layout_width="205dp"/>
+            android:layout_width="70dp"/>
+
+        <ImageButton
+            android:layout_width="65dp"
+            android:layout_height="45dp"
+            android:background="@drawable/buttonshape"
+            android:src="@drawable/ic_refresh"
+            android:id="@+id/button3"/>
+
+        <Space
+            android:layout_height="wrap_content"
+            android:layout_width="70dp"/>
 
         <ImageButton
             android:id="@+id/button2"

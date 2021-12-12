@@ -201,7 +201,7 @@ public class Portrait_Selection_Activity extends AppCompatActivity {
         uThread.start();
         try{
             uThread.join();
-            img_temp.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            img_temp.setScaleType(ImageView.ScaleType.FIT_CENTER);
             img_temp.setImageBitmap(res);
             img_temp.invalidate();
         }catch (InterruptedException e){

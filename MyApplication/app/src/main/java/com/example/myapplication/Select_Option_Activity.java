@@ -34,6 +34,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -45,7 +46,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Select_Option_Activity extends AppCompatActivity{
-    private String base_url;
+    private String base_url, file_path;
     ImageButton btBack_1, btNext_2;
     Button Menu_1, Menu_2, Menu_3, Menu_4;
     ImageView imageview_captured;
@@ -70,6 +71,7 @@ public class Select_Option_Activity extends AppCompatActivity{
         byte[] byteArray = getIntent().getByteArrayExtra("image");
         Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
         forShoot = bitmap;  //Intent에서 이어받은 bitmap을 forShoot에 바로 이식해둔다
+        file_path = getIntent().getStringExtra("FilePath");
         base_url = getIntent().getStringExtra("url_for_network");
 
         imageview_captured.setImageBitmap(bitmap);
@@ -123,36 +125,20 @@ public class Select_Option_Activity extends AppCompatActivity{
         Menu_3.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Bitmap original_picture;
-                Bitmap segmented_picture;
-                original_picture = forShoot;//원본 사진
-
-                connect("/segmentation");
-                segmented_picture = res;    //변한 사진
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 Intent intent = new Intent(Select_Option_Activity.this, Segmentataion_Selection_Activity.class);
 
-                float scale = (float) (1024/(float)segmented_picture.getWidth());
-                int image_w = (int) (segmented_picture.getWidth() * scale);
-                int image_h = (int) (segmented_picture.getHeight() * scale);
-                Bitmap resize = Bitmap.createScaledBitmap(segmented_picture, image_w, image_h, true);
+                Bitmap bitm = ((BitmapDrawable)imageview_captured.getDrawable()).getBitmap();
+                float scale = (float) (1024/(float)bitm.getWidth());
+                int image_w = (int) (bitm.getWidth() * scale);
+                int image_h = (int) (bitm.getHeight() * scale);
+                Bitmap resize = Bitmap.createScaledBitmap(bitm, image_w, image_h, true);
                 resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 byte[] byteArray = stream.toByteArray();
 
 
-                ByteArrayOutputStream stream_2 = new ByteArrayOutputStream();
-                float scale_2 = (float) (1024/(float)original_picture.getWidth());
-                int image_w_2 = (int) (original_picture.getWidth() * scale_2);
-                int image_h_2 = (int) (original_picture.getHeight() * scale_2);
-                Bitmap resize_2 = Bitmap.createScaledBitmap(original_picture, image_w_2, image_h_2, true);
-                resize_2.compress(Bitmap.CompressFormat.JPEG, 100, stream_2);
-                byte[] byteArray_2 = stream_2.toByteArray();
-
-
-
                 intent.putExtra("image", byteArray);
-                intent.putExtra("original", byteArray_2);
                 intent.putExtra("url_for_network", base_url);
                 startActivity(intent);
 
@@ -253,10 +239,11 @@ public class Select_Option_Activity extends AppCompatActivity{
                     con.setRequestProperty("Connection", "Keep-Alive");
                     con.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
 
+
                     // write data
                     OutputStream out = new DataOutputStream(con.getOutputStream());
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
-                    writer.write(data);
+                    //writer.write(data);
                     //dos.writeBytes(twoHyphens + boundary + lineEnd);
                     // 파일 전송시 파라메터명은 file1 파일명은 camera.jpg로 설정하여 전송
                     //dos.writeBytes("Content-Disposition: form-data; name=\"image\";filename=\"input_image.jpg\"" +lineEnd);
@@ -285,21 +272,12 @@ public class Select_Option_Activity extends AppCompatActivity{
                     e.printStackTrace();
                 }
 
-
-                //NetworkTask networkTask = new NetworkTask(url, null);
-                //networkTask.execute();
             }
         };
         uThread.start();
         try{
-
             uThread.join();
-
-            //imageview_captured.setImageBitmap(res);
-            //imageview_captured.invalidate();
-
         }catch (InterruptedException e){
-
             e.printStackTrace();
 
         }
