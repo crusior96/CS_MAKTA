@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,17 +23,22 @@ import org.json.JSONObject;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Segmentataion_Selection_Activity extends AppCompatActivity {
     ImageView img_temp;
     ImageButton button_1, button_2, button_3;
-    JSONObject jsonObject;
     Bitmap res;
+    String file_path, result_path;
     private String base_url;
 
     @Override
@@ -47,10 +53,16 @@ public class Segmentataion_Selection_Activity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
 
-        //Select_Option_Activity로부터 받아온 원본 이미지
-        byte[] byteArray = getIntent().getByteArrayExtra("image");
-        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        Bitmap bitmap = null;
+        file_path = getIntent().getStringExtra("location");
 
+        try{
+            String image_path = getCacheDir() + "/" + file_path;
+            bitmap = BitmapFactory.decodeFile(image_path);
+            img_temp.setImageBitmap(bitmap);
+        }catch(Exception e){
+            Toast.makeText(getApplicationContext(), "파일 로드 실패", Toast.LENGTH_SHORT).show();
+        }
 
         img_temp.setImageBitmap(bitmap);
         base_url = getIntent().getStringExtra("url_for_network");
@@ -63,13 +75,7 @@ public class Segmentataion_Selection_Activity extends AppCompatActivity {
             public void onClick(View view) {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 Intent intent = new Intent(Segmentataion_Selection_Activity.this, Select_Option_Activity.class);
-                float scale = (float) (1024/(float)bitmap.getWidth());
-                int image_w = (int) (bitmap.getWidth() * scale);
-                int image_h = (int) (bitmap.getHeight() * scale);
-                Bitmap resize = Bitmap.createScaledBitmap(bitmap, image_w, image_h, true);
-                resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-                intent.putExtra("image", byteArray);
+                intent.putExtra("location", file_path);
                 intent.putExtra("url_for_network", base_url);
                 startActivity(intent);
                 finish();
@@ -84,13 +90,8 @@ public class Segmentataion_Selection_Activity extends AppCompatActivity {
                 Intent intent = new Intent(Segmentataion_Selection_Activity.this, Result_Activity.class);
                 if(img_temp.getDrawable() != null){
                     Bitmap new_bitmap = ((BitmapDrawable)img_temp.getDrawable()).getBitmap();
-                    float scale = (float) (1024/(float)new_bitmap.getWidth());
-                    int image_w = (int) (new_bitmap.getWidth() * scale);
-                    int image_h = (int) (new_bitmap.getHeight() * scale);
-                    Bitmap resize = Bitmap.createScaledBitmap(new_bitmap, image_w, image_h, true);
-                    resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
-                    intent.putExtra("image", byteArray);
+                    saveBitmapToJpeg(new_bitmap);
+                    intent.putExtra("location", result_path);
                     intent.putExtra("url_for_network", base_url);
                     startActivity(intent);
                     finish();
@@ -104,6 +105,24 @@ public class Segmentataion_Selection_Activity extends AppCompatActivity {
                 connect();
             }
         });
+
+    }
+
+    public void saveBitmapToJpeg(Bitmap bmp){
+        File file;
+        String timestamp = new SimpleDateFormat("HHmmss").format(new Date());
+        file = new File(getCacheDir(), timestamp + "cropped_result.jpg");
+        result_path = timestamp + "cropped_result.jpg";
+        try{
+            file.createNewFile();
+            OutputStream outs = null;
+            outs = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG,100,outs);
+            outs.flush();
+            outs.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
 
     }
 

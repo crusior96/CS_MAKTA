@@ -39,6 +39,8 @@ import java.util.Date;
 public class Result_Activity extends AppCompatActivity {
     ImageButton btBack_2, btSave;
     ImageView imageview_final;
+    String file_path;
+    Bitmap bitmap_final;
     private String base_url;
 
     @Override
@@ -51,13 +53,19 @@ public class Result_Activity extends AppCompatActivity {
         imageview_final = (ImageView) findViewById(R.id.imageview_final);
 
         Bundle extras = getIntent().getExtras();
-        byte[] byteArray = getIntent().getByteArrayExtra("image");
-        Bitmap bitmap_final = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
+        bitmap_final = null;
         base_url = getIntent().getStringExtra("url_for_network");
+        file_path = getIntent().getStringExtra("location");
 
+        try{
+            String image_path = getCacheDir() + "/" + file_path;
+            bitmap_final = BitmapFactory.decodeFile(image_path);
+            imageview_final.setImageBitmap(bitmap_final);
+        }catch(Exception e){
+            Toast.makeText(getApplicationContext(), "파일 로드 실패", Toast.LENGTH_SHORT).show();
+        }
 
-        imageview_final.setImageBitmap(bitmap_final);
 
         //이 화면에 들어오는 순간 원본 이미지는 아예 삭제해버리는 방향으로 진행한다
         connect();
@@ -95,9 +103,6 @@ public class Result_Activity extends AppCompatActivity {
             bmp.compress(Bitmap.CompressFormat.JPEG,100,outs);
             outs.flush();
             outs.close();
-
-            String msg = "사진 저장 완료";
-            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
         }catch(IOException e){
             e.printStackTrace();
         }

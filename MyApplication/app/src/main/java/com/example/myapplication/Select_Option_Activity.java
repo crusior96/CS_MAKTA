@@ -68,10 +68,20 @@ public class Select_Option_Activity extends AppCompatActivity{
         Menu_4 = (Button) findViewById(R.id.menu_4);
 
         Bundle extras = getIntent().getExtras();
-        byte[] byteArray = getIntent().getByteArrayExtra("image");
-        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        Bitmap bitmap = null;
+        file_path = getIntent().getStringExtra("location");
+
+        try{
+            String image_path = getCacheDir() + "/" + file_path;
+            bitmap = BitmapFactory.decodeFile(image_path);
+            forShoot = bitmap;
+            imageview_captured.setImageBitmap(bitmap);
+        }catch(Exception e){
+            Toast.makeText(getApplicationContext(), "파일 로드 실패", Toast.LENGTH_SHORT).show();
+        }
+
         forShoot = bitmap;  //Intent에서 이어받은 bitmap을 forShoot에 바로 이식해둔다
-        file_path = getIntent().getStringExtra("FilePath");
+
         base_url = getIntent().getStringExtra("url_for_network");
 
         imageview_captured.setImageBitmap(bitmap);
@@ -80,20 +90,8 @@ public class Select_Option_Activity extends AppCompatActivity{
         Menu_1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 Intent intent = new Intent(Select_Option_Activity.this, Pose_Number_Selection_Activity.class);
-
-                Bitmap bitm = ((BitmapDrawable)imageview_captured.getDrawable()).getBitmap();
-                float scale = (float) (1024/(float)bitm.getWidth());
-                int image_w = (int) (bitm.getWidth() * scale);
-                int image_h = (int) (bitm.getHeight() * scale);
-                Bitmap resize = Bitmap.createScaledBitmap(bitm, image_w, image_h, true);
-                resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-
-
-
-                intent.putExtra("image", byteArray);
+                intent.putExtra("location", file_path);
                 intent.putExtra("url_for_network", base_url);
                 startActivity(intent);
             }
@@ -103,19 +101,8 @@ public class Select_Option_Activity extends AppCompatActivity{
         Menu_2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 Intent intent = new Intent(Select_Option_Activity.this, Back_Number_Selection_Activity.class);
-
-                Bitmap bitm = ((BitmapDrawable)imageview_captured.getDrawable()).getBitmap();
-                float scale = (float) (1024/(float)bitm.getWidth());
-                int image_w = (int) (bitm.getWidth() * scale);
-                int image_h = (int) (bitm.getHeight() * scale);
-                Bitmap resize = Bitmap.createScaledBitmap(bitm, image_w, image_h, true);
-                resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-
-
-                intent.putExtra("image", byteArray);
+                intent.putExtra("location", file_path);
                 intent.putExtra("url_for_network", base_url);
                 startActivity(intent);
             }
@@ -125,20 +112,8 @@ public class Select_Option_Activity extends AppCompatActivity{
         Menu_3.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 Intent intent = new Intent(Select_Option_Activity.this, Segmentataion_Selection_Activity.class);
-
-                Bitmap bitm = ((BitmapDrawable)imageview_captured.getDrawable()).getBitmap();
-                float scale = (float) (1024/(float)bitm.getWidth());
-                int image_w = (int) (bitm.getWidth() * scale);
-                int image_h = (int) (bitm.getHeight() * scale);
-                Bitmap resize = Bitmap.createScaledBitmap(bitm, image_w, image_h, true);
-                resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-
-
-                intent.putExtra("image", byteArray);
+                intent.putExtra("location", file_path);
                 intent.putExtra("url_for_network", base_url);
                 startActivity(intent);
 
@@ -149,19 +124,8 @@ public class Select_Option_Activity extends AppCompatActivity{
         Menu_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 Intent intent = new Intent(Select_Option_Activity.this, Portrait_Selection_Activity.class);
-
-                Bitmap bitm = ((BitmapDrawable)imageview_captured.getDrawable()).getBitmap();
-                float scale = (float) (1024/(float)bitm.getWidth());
-                int image_w = (int) (bitm.getWidth() * scale);
-                int image_h = (int) (bitm.getHeight() * scale);
-                Bitmap resize = Bitmap.createScaledBitmap(bitm, image_w, image_h, true);
-                resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-
-
-                intent.putExtra("image", byteArray);
+                intent.putExtra("location", file_path);
                 intent.putExtra("url_for_network", base_url);
                 startActivity(intent);
             }

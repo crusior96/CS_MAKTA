@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,18 +23,24 @@ import org.json.JSONObject;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Portrait_Selection_Activity extends AppCompatActivity {
     ImageView img_temp;
     ImageButton button_1, button_2;
     Button sig_1, sig_2, sig_3;
     JSONObject jsonObject;
-    Bitmap res, original_bitmap;
+    Bitmap res;
+    String file_path, result_path;
     int sigma_value;
     private String base_url;
 
@@ -52,13 +59,18 @@ public class Portrait_Selection_Activity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
 
-        byte[] byteArray_2 = getIntent().getByteArrayExtra("image");
-        Bitmap bitmap_2 = BitmapFactory.decodeByteArray(byteArray_2, 0, byteArray_2.length);
+        Bitmap bitmap = null;
+        file_path = getIntent().getStringExtra("location");
 
-        //이전 화면(편집메뉴 선택)으로 돌아가기 위해 마련해둔 원본 이미지 비트맵
-        original_bitmap = bitmap_2;
+        try{
+            String image_path = getCacheDir() + "/" + file_path;
+            bitmap = BitmapFactory.decodeFile(image_path);
+            img_temp.setImageBitmap(bitmap);
+        }catch(Exception e){
+            Toast.makeText(getApplicationContext(), "파일 로드 실패", Toast.LENGTH_SHORT).show();
+        }
 
-        img_temp.setImageBitmap(bitmap_2);
+        img_temp.setImageBitmap(bitmap);
         base_url = getIntent().getStringExtra("url_for_network");
 
 
@@ -69,14 +81,7 @@ public class Portrait_Selection_Activity extends AppCompatActivity {
             public void onClick(View view) {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 Intent intent = new Intent(Portrait_Selection_Activity.this, Select_Option_Activity.class);
-                Bitmap bitm = bitmap_2;
-                float scale = (float) (1024/(float)bitm.getWidth());
-                int image_w = (int) (bitm.getWidth() * scale);
-                int image_h = (int) (bitm.getHeight() * scale);
-                Bitmap resize = Bitmap.createScaledBitmap(bitm, image_w, image_h, true);
-                resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-                intent.putExtra("image", byteArray);
+                intent.putExtra("location", file_path);
                 intent.putExtra("url_for_network", base_url);
                 startActivity(intent);
                 finish();
@@ -91,13 +96,8 @@ public class Portrait_Selection_Activity extends AppCompatActivity {
                 Intent intent = new Intent(Portrait_Selection_Activity.this, Result_Activity.class);
                 if(img_temp.getDrawable() != null){
                     Bitmap new_bitmap = ((BitmapDrawable)img_temp.getDrawable()).getBitmap();
-                    float scale = (float) (1024/(float)new_bitmap.getWidth());
-                    int image_w = (int) (new_bitmap.getWidth() * scale);
-                    int image_h = (int) (new_bitmap.getHeight() * scale);
-                    Bitmap resize = Bitmap.createScaledBitmap(new_bitmap, image_w, image_h, true);
-                    resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
-                    intent.putExtra("image", byteArray);
+                    saveBitmapToJpeg(new_bitmap);
+                    intent.putExtra("location", result_path);
                     intent.putExtra("url_for_network", base_url);
                     startActivity(intent);
                     finish();
@@ -129,6 +129,28 @@ public class Portrait_Selection_Activity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    public void saveBitmapToJpeg(Bitmap bmp){
+        File file;
+        String timestamp = new SimpleDateFormat("HHmmss").format(new Date());
+        file = new File(getCacheDir(), timestamp + "cropped_result.jpg");
+        result_path = timestamp + "cropped_result.jpg";
+        try{
+            file.createNewFile();
+            OutputStream outs = null;
+            outs = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG,100,outs);
+            outs.flush();
+            outs.close();
+            String msg = "사진 저장 완료";
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
 
     }
 

@@ -1,5 +1,8 @@
 package com.example.myapplication;
 
+import static android.os.Environment.getExternalStoragePublicDirectory;
+import static java.security.AccessController.getContext;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -68,6 +71,7 @@ public class CropperActivity extends AppCompatActivity {
     ImageView imageview_Crop;
     ImageButton btBrowse, btReset, btNext_1;
     JSONObject jsonObject;
+    String origin_img_path;
 
     @Override
     protected void onCreate(Bundle savedInstance){
@@ -126,16 +130,10 @@ public class CropperActivity extends AppCompatActivity {
             else{
                 if(imageview_Crop.getDrawable() != null){
                     Bitmap bitmap = ((BitmapDrawable)imageview_Crop.getDrawable()).getBitmap();
-                    //HTTP_POST(bitmap);
                     connect(bitmap);
                     //먼저 원본 이미지를 보낸 다음 crop 작업 작동하는게 좋을듯하다
-                    float scale = (float) (1024/(float)bitmap.getWidth());
-                    int image_w = (int) (bitmap.getWidth() * scale);
-                    int image_h = (int) (bitmap.getHeight() * scale);
-                    Bitmap resize = Bitmap.createScaledBitmap(bitmap, image_w, image_h, true);
-                    resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
-                    intent.putExtra("image", byteArray);
+                    saveBitmapToJpeg(bitmap);
+                    intent.putExtra("location",origin_img_path);
                     intent.putExtra("url_for_network", base_url);
                     startActivity(intent);
                 }
@@ -158,6 +156,24 @@ public class CropperActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK){
                 imageview_Crop.setImageURI(result.getUri());
             }
+        }
+
+    }
+
+    public void saveBitmapToJpeg(Bitmap bmp){
+        File file;
+        String timestamp = new SimpleDateFormat("HHmmss").format(new Date());
+        file = new File(getCacheDir(), timestamp + "cropped_original.jpg");
+        origin_img_path = timestamp + "cropped_original.jpg";
+        try{
+            file.createNewFile();
+            OutputStream outs = null;
+            outs = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG,100,outs);
+            outs.flush();
+            outs.close();
+        }catch(IOException e){
+            e.printStackTrace();
         }
 
     }
